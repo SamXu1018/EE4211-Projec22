@@ -29,3 +29,12 @@ def json2csv(raw_data, timestamp):
         res_df = pd.concat([res_df, pd.DataFrame([[str(timestamp), ele['carpark_number'], info['total_lots'], info['lots_available'], info['lot_type']]], columns=header)])
         # res_df = res_df.append({'timestamp': timestamp, 'carpark_number': ele['carpark_number'], 'total_lots': info['total_lots'], 'lots_available': info['lots_available'], 'lot_type': info['lot_type']}, ignore_index=True)
     return res_df
+
+def postalcode2xy(postal_code: str):
+    base = 'https://developers.onemap.sg/'
+    path = '/commonapi/search'
+
+    resp = requests.get(base + path, params={'searchVal': postal_code, 'returnGeom': 'Y', 'getAddrDetails': 'N'})
+    res = resp.json()
+    X, Y = res['results'][0]['X'], res['results'][0]['Y']
+    return float(X), float(Y)
